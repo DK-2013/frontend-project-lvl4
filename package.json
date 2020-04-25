@@ -19,9 +19,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:hexlet-components/projects-frontend-l4-server.git"
+    "url": "git@github.com:DK-2013/frontend-project-lvl4.git"
   },
-  "author": "Kirill Mokevnin",
+  "author": "Dmitry Kizilov",
   "license": "ISC",
   "homepage": "",
   "dependencies": {
@@ -38,7 +38,7 @@
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
     "core-js": "^3.6.4",
-    "css-loader": "^3.4.2",
+    "css-loader": "^3.4.2   ",
     "cssnano": "^4.1.10",
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",

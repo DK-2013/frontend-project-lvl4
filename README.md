@@ -10,9 +10,16 @@
 $ make install
 ```
 
-### Run
+### Local Run
 
 ```sh
 $ make start
 # open http://localhost:5000
 ```
+### Deploy
+```sh
+$ heroku create
+$ make deploy
+$ heroku open
+```
+[Deployed sample](https://glacial-springs-24774.herokuapp.com/)
