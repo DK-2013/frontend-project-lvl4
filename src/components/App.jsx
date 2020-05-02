@@ -1,10 +1,10 @@
 import React from 'react';
-import Channels from './Channels';
-import MessagesBox from './MessagesBox';
+import Channels from '../features/channels/Channels';
+import MessagesBox from '../features/messages/MessagesBox';
 
-const App = ({ channels }) => (
+const App = () => (
   <div className="row h-100 pb-3">
-    <Channels channels={channels} />
+    <Channels />
     <MessagesBox />
   </div>
 );
