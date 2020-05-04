@@ -7,7 +7,12 @@ const MessagesBox = ({ messages, addMessage: addMsg }) => (
   <div className="col h-100">
     <div className="d-flex flex-column h-100">
       <div id="messages-box" className="chat-messages overflow-auto mb-3">
-        {messages.map(({ id, text }) => <div key={id}>{`:: ${text}`}</div>)}
+        {messages.map(({ id, text, userName }) => (
+          <div key={id} className="mb-2">
+            <div><b>{userName}</b></div>
+            {text}
+          </div>
+        ))}
       </div>
       <div className="mt-auto">
         <MessageBar addMessage={addMsg} />
@@ -15,7 +20,7 @@ const MessagesBox = ({ messages, addMessage: addMsg }) => (
     </div>
   </div>
 );
-const selectMessages = ({ messages }) => messages;
+const selectMessages = ({ messages }) => messages.items;
 const selectChannel = ({ currentChannelId }) => currentChannelId;
 
 const selectChannelMessages = createSelector(

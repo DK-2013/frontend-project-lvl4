@@ -26,14 +26,23 @@ const getUserName = () => {
   return cookies.get('userName');
 };
 
-const userName = getUserName();
-
-const store = configureStore({
-  reducer: rootReducer,
-  preloadedState: { ...gon, userName },
-});
-
 const run = () => {
+  const userName = getUserName();
+  const { channels, messages, currentChannelId } = gon;
+  const store = configureStore({
+    reducer: rootReducer,
+    preloadedState: {
+      channels,
+      currentChannelId,
+      messages: {
+        items: messages,
+        current: '',
+        error: '',
+      },
+      userName,
+    },
+  });
+
   const mountNode = document.getElementById('chat');
   render(
     <Provider store={store}>

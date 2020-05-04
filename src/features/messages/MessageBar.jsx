@@ -1,33 +1,49 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { addMessage } from './messagesSlice';
+import { postMessage, setCurrentMessage } from './messagesSlice';
 
-const getSubmitHandle = ({ setInputMessage, addMsg, channelId }) => (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const data = new FormData(form);
-  addMsg(channelId, data.get('body'));
-  setInputMessage('');
-};
+const MessageBar = ({
+  userName,
+  channelId,
+  message,
+  errMsg,
+  setCurrentMessage: inputHandle,
+  postMessage: addMessage,
+}) => {
+  const onInputHandle = ({ target: { value } }) => inputHandle(value);
 
-const MessageBar = ({ currentChannelId: channelId, addMessage: addMsg }) => {
-  const [inputMessage, setInputMessage] = useState('');
-  const inputHandle = ({ target: { value } }) => setInputMessage(value);
+  const submitHandle = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    const text = data.get('body');
+    addMessage({
+      userName, channelId, text,
+    });
+  };
 
   return (
-    <form noValidate="" className="" onSubmit={getSubmitHandle({ setInputMessage, addMsg, channelId })}>
+    <form noValidate="" className="" onSubmit={submitHandle}>
       <div className="form-group">
         <div className="input-group">
-          <input name="body" className="form-control" onChange={inputHandle} value={inputMessage} />
-          <div className="d-block invalid-feedback">&nbsp;</div>
+          <input name="body" className="form-control" onChange={onInputHandle} value={message} />
+          <div className="d-block invalid-feedback">
+            {errMsg}
+            &nbsp;
+          </div>
         </div>
       </div>
     </form>
   );
 };
 
-const mapStateToProps = ({ currentChannelId }) => ({ currentChannelId });
+const mapStateToProps = ({ currentChannelId, messages: { error, current }, userName }) => ({
+  userName,
+  channelId: currentChannelId,
+  errMsg: error,
+  message: current,
+});
 
-const mapDispatch = { addMessage };
+const mapDispatch = { setCurrentMessage, postMessage };
 
 export default connect(mapStateToProps, mapDispatch)(MessageBar);
