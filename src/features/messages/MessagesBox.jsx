@@ -20,7 +20,7 @@ const MessagesBox = ({ messages, addMessage: addMsg }) => (
     </div>
   </div>
 );
-const selectMessages = ({ messages }) => messages.items;
+const selectMessages = ({ messages }) => messages;
 const selectChannel = ({ currentChannelId }) => currentChannelId;
 
 const selectChannelMessages = createSelector(

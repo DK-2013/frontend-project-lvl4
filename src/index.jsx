@@ -37,11 +37,7 @@ const run = () => {
     preloadedState: {
       channels,
       currentChannelId,
-      messages: {
-        items: messages,
-        current: '',
-        error: '',
-      },
+      messages,
       userName,
     },
   });

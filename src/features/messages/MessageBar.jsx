@@ -1,34 +1,43 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { postMessage, setCurrentMessage } from './messagesSlice';
+import { useFormik } from 'formik';
+import postMessageRequest from '../../api/http';
+
+const netErrorMsg = 'App is trying to connect, so messages can’t be sent yet.';
 
 const MessageBar = ({
   userName,
   channelId,
-  message,
-  errMsg,
-  setCurrentMessage: inputHandle,
-  postMessage: addMessage,
 }) => {
-  const onInputHandle = ({ target: { value } }) => inputHandle(value);
+  const formik = useFormik({
+    initialValues: {
+      bodyMsg: '',
+    },
+    onSubmit: async ({ bodyMsg: text }, { resetForm, setErrors }) => {
+      try {
+        await postMessageRequest({ channelId, userName, text });
+        resetForm();
+      } catch (e) {
+        console.error(e);
+        setErrors({ network: netErrorMsg });
+      }
+    },
+  });
 
-  const submitHandle = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const data = new FormData(form);
-    const text = data.get('body');
-    addMessage({
-      userName, channelId, text,
-    });
-  };
-
+  const { network: errorMsg } = formik.errors;
   return (
-    <form noValidate="" className="" onSubmit={submitHandle}>
+    <form noValidate="" className="" onSubmit={formik.handleSubmit}>
       <div className="form-group">
         <div className="input-group">
-          <input name="body" className="form-control" onChange={onInputHandle} value={message} />
+          <input
+            id="bodyMsg"
+            name="bodyMsg"
+            className="form-control"
+            onChange={formik.handleChange}
+            value={formik.values.bodyMsg}
+          />
           <div className="d-block invalid-feedback">
-            {errMsg}
+            {errorMsg && errorMsg}
             &nbsp;
           </div>
         </div>
@@ -37,13 +46,9 @@ const MessageBar = ({
   );
 };
 
-const mapStateToProps = ({ currentChannelId, messages: { error, current }, userName }) => ({
+const mapStateToProps = ({ currentChannelId, userName }) => ({
   userName,
   channelId: currentChannelId,
-  errMsg: error,
-  message: current,
 });
 
-const mapDispatch = { setCurrentMessage, postMessage };
-
-export default connect(mapStateToProps, mapDispatch)(MessageBar);
+export default connect(mapStateToProps)(MessageBar);
