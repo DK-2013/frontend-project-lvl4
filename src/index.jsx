@@ -10,10 +10,11 @@ import '../assets/application.scss';
 import gon from 'gon';
 import faker from 'faker';
 import cookies from 'js-cookie';
-// import io from 'socket.io-client';
+import io from 'socket.io-client';
 
 import App from './components/App';
 import rootReducer from './reducers';
+import { addNewMessage } from './features/messages/messagesSlice';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -25,6 +26,8 @@ const getUserName = () => {
   if (needUserName) cookies.set('userName', faker.name.findName());
   return cookies.get('userName');
 };
+
+const socket = io();
 
 const run = () => {
   const userName = getUserName();
@@ -50,6 +53,12 @@ const run = () => {
     </Provider>,
     mountNode,
   );
+
+  const { dispatch } = store;
+  socket.on('newMessage', ({ data }) => {
+    const { attributes: message } = data;
+    dispatch(addNewMessage(message));
+  });
 };
 
 run();

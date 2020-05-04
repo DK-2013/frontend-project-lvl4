@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import { postMessageRequest } from '../../api/http';
+import postMessageRequest from '../../api/http';
 
 const messagesSlice = createSlice({
   name: 'messages',
@@ -10,13 +10,13 @@ const messagesSlice = createSlice({
     error: null,
   },
   reducers: {
-    setCurrentMessage(state, { payload: text }) {
-      state.current = text;
-    },
-    postMessageSuccess(state, { payload }) {
+    addNewMessage(state, { payload }) {
       state.items.push(payload);
       state.current = '';
       state.error = null;
+    },
+    setCurrentMessage(state, { payload: text }) {
+      state.current = text;
     },
     postMessageFailed(state, { payload: errorMsg }) {
       state.error = errorMsg;
@@ -24,7 +24,7 @@ const messagesSlice = createSlice({
   },
 });
 
-export const { setCurrentMessage, postMessageSuccess, postMessageFailed } = messagesSlice.actions;
+export const { addNewMessage, setCurrentMessage, postMessageFailed } = messagesSlice.actions;
 
 export default messagesSlice.reducer;
 
@@ -32,9 +32,7 @@ export const postMessage = ({
   channelId, userName, text,
 }) => async (dispatch) => {
   try {
-    const { data } = await postMessageRequest({ channelId, userName, text });
-    const { attributes: message } = data;
-    dispatch(postMessageSuccess(message));
+    await postMessageRequest({ channelId, userName, text });
   } catch (e) {
     dispatch(postMessageFailed('App is trying to connect, so messages can’t be sent yet.'));
   }
