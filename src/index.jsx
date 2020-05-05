@@ -12,6 +12,7 @@ import faker from 'faker';
 import cookies from 'js-cookie';
 import io from 'socket.io-client';
 
+import { ContextProvider } from './context';
 import App from './components/App';
 import rootReducer from './reducers';
 import { addNewMessage } from './features/messages/messagesSlice';
@@ -39,14 +40,15 @@ const run = () => {
       channels,
       currentChannelId,
       messages,
-      userName,
     },
   });
 
   const mountNode = document.getElementById('chat');
   render(
     <Provider store={store}>
-      <App />
+      <ContextProvider value={{ userName }}>
+        <App />
+      </ContextProvider>
     </Provider>,
     mountNode,
   );

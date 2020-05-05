@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 import { useFormik } from 'formik';
+import context from '../../context';
 import { postMessage } from './messagesSlice';
 
 const netErrorMsg = 'App is trying to connect, so messages can’t be sent yet.';
 let isSending = false;
 
 const MessageBar = ({
-  userName,
   channelId,
   sendMessage,
 }) => {
+  const { userName } = useContext(context);
   const formik = useFormik({
     initialValues: {
       bodyMsg: '',
@@ -64,8 +65,7 @@ const MessageBar = ({
   );
 };
 
-const mapStateToProps = ({ currentChannelId, userName }) => ({
-  userName,
+const mapStateToProps = ({ currentChannelId }) => ({
   channelId: currentChannelId,
 });
 
