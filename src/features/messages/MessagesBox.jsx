@@ -6,6 +6,7 @@ import MessageBar from './MessageBar';
 const MessagesBox = ({ messages, addMessage: addMsg }) => (
   <div className="col h-100">
     <div className="d-flex flex-column h-100">
+      {/* todo scroll to last post */}
       <div id="messages-box" className="chat-messages overflow-auto mb-3">
         {messages.map(({ id, text, userName }) => (
           <div key={id} className="mb-2">

@@ -31,7 +31,8 @@ const socket = io();
 
 const run = () => {
   const userName = getUserName();
-  const { channels, messages, currentChannelId } = gon;
+  const currentChannelId = Number(cookies.get('currentChannelId')) || gon.currentChannelId;
+  const { channels, messages } = gon;
   const store = configureStore({
     reducer: rootReducer,
     preloadedState: {
@@ -53,6 +54,7 @@ const run = () => {
   const { dispatch } = store;
   socket.on('newMessage', ({ data }) => {
     const { attributes: message } = data;
+    if (userName === message.userName) return;
     dispatch(addNewMessage(message));
   });
 };

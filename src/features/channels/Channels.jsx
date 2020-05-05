@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import cookies from 'js-cookie';
 import { switchChannel } from './currentChannelSlice';
 
 const getRenderChannel = (currentChannelId, toggleChannel) => ({ id, name }) => (
@@ -7,7 +8,10 @@ const getRenderChannel = (currentChannelId, toggleChannel) => ({ id, name }) => 
     <button
       type="button"
       className={`nav-link btn btn-block ${currentChannelId === id ? 'active ' : ' '}`}
-      onClick={() => toggleChannel(id)}
+      onClick={() => {
+        cookies.set('currentChannelId', id);
+        toggleChannel(id);
+      }}
     >
       {name}
     </button>
