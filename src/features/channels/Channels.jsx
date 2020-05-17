@@ -1,34 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import cookies from 'js-cookie';
+import { ListGroup } from 'react-bootstrap';
 import { switchChannel } from './currentChannelSlice';
+import Header from './Header';
+import channelActions from './ChannelActions';
 
-const getRenderChannel = (currentChannelId, toggleChannel) => ({ id, name }) => (
-  <li className="nav-item" key={id}>
-    <button
-      type="button"
-      className={`nav-link btn btn-block ${currentChannelId === id ? 'active ' : ' '}`}
+const getRenderChannel = (currentChannelId, toggleChannel) => ({ id, name }) => {
+  const active = currentChannelId === id;
+  return (
+    <ListGroup.Item
+      key={id}
+      active={active}
       onClick={() => {
         cookies.set('currentChannelId', id);
         toggleChannel(id);
       }}
     >
       {name}
-    </button>
-  </li>
-);
+    </ListGroup.Item>
+  );
+};
 
-const Channels = ({ channels, currentChannelId, switchChannel: toggleChannel }) => (
-  <div className="col-3 border-right">
-    <div className="d-flex mb-2">
-      <span>Channels</span>
-      <button type="button" className="btn btn-link p-0 ml-auto">+</button>
-    </div>
-    <ul className="nav flex-column nav-pills nav-fill">
-      {channels.map(getRenderChannel(currentChannelId, toggleChannel))}
-    </ul>
-  </div>
-);
+const Channels = ({ channels, currentChannelId, switchChannel: toggleChannel }) => {
+  const currentChannel = channels.find(({ id }) => id === currentChannelId);
+  const [action, setAction] = useState('');
+  const handleClose = () => setAction('');
+  const Modal = channelActions[action] || null;
+  return (
+    <>
+      <Header
+        currentChannel={currentChannel}
+        setAction={setAction}
+      />
+      <ListGroup>
+        {channels.map(getRenderChannel(currentChannelId, toggleChannel))}
+      </ListGroup>
+      {Modal && <Modal handleClose={handleClose} currentChannel={currentChannel} />}
+    </>
+  );
+};
 
 const mapStateToProps = ({ channels, currentChannelId }) => ({ channels, currentChannelId });
 

@@ -1,12 +1,15 @@
 import React from 'react';
+import { Row, Col } from 'react-bootstrap';
 import Channels from '../features/channels/Channels';
 import MessagesBox from '../features/messages/MessagesBox';
 
 const App = () => (
-  <div className="row h-100 pb-3">
-    <Channels />
+  <Row className="h-100 pb-3">
+    <Col sm={3} className="border-right">
+      <Channels />
+    </Col>
     <MessagesBox />
-  </div>
+  </Row>
 );
 
 export default App;
