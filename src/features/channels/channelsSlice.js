@@ -4,8 +4,8 @@ const channelsSlice = createSlice({
   name: 'channels',
   initialState: [],
   reducers: {
-    addChannel(state, { payload: { id, name } }) {
-      state.push({ id, name, removable: true });
+    addChannel(state, { payload: channel }) {
+      state.push(channel);
     },
     removeChannel(state, { payload: { id } }) {
       return state.filter((channel) => channel.id !== id);

@@ -4,7 +4,7 @@ import cookies from 'js-cookie';
 import { ListGroup } from 'react-bootstrap';
 import { switchChannel } from './currentChannelSlice';
 import Header from './Header';
-import channelActions from './ChannelActions';
+import ChannelModal from './ChannelModal';
 
 const getRenderChannel = (currentChannelId, toggleChannel) => ({ id, name }) => {
   const active = currentChannelId === id;
@@ -26,7 +26,6 @@ const Channels = ({ channels, currentChannelId, switchChannel: toggleChannel }) 
   const currentChannel = channels.find(({ id }) => id === currentChannelId);
   const [action, setAction] = useState('');
   const handleClose = () => setAction('');
-  const Modal = channelActions[action] || null;
   return (
     <>
       <Header
@@ -36,7 +35,7 @@ const Channels = ({ channels, currentChannelId, switchChannel: toggleChannel }) 
       <ListGroup>
         {channels.map(getRenderChannel(currentChannelId, toggleChannel))}
       </ListGroup>
-      {Modal && <Modal handleClose={handleClose} currentChannel={currentChannel} />}
+      <ChannelModal handleClose={handleClose} actionName={action} />
     </>
   );
 };

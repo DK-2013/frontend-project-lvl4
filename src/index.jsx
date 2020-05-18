@@ -15,7 +15,8 @@ import io from 'socket.io-client';
 import { ContextProvider } from './context';
 import App from './components/App';
 import rootReducer from './reducers';
-import { addNewMessage } from './features/messages/messagesSlice';
+import { addNewMessage, removeChannelMessages } from './features/messages/messagesSlice';
+import { addChannel, renameChannel, removeChannel } from './features/channels/channelsSlice';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -54,10 +55,29 @@ const run = () => {
   );
 
   const { dispatch } = store;
-  socket.on('newMessage', ({ data }) => {
-    const { attributes: message } = data;
-    if (userName === message.userName) return;
-    dispatch(addNewMessage(message));
+  const socketHandlers = {
+    newMessage: ({ data }) => {
+      const { attributes: message } = data;
+      if (userName === message.userName) return;
+      dispatch(addNewMessage(message));
+    },
+    newChannel: ({ data }) => {
+      const { attributes: channel } = data;
+      dispatch(addChannel(channel));
+    },
+    renameChannel: ({ data }) => {
+      const { attributes: channel } = data;
+      dispatch(renameChannel(channel));
+    },
+    removeChannel: ({ data }) => {
+      const { id } = data;
+      dispatch(removeChannel({ id }));
+      dispatch(removeChannelMessages(id));
+    },
+  };
+
+  Object.entries(socketHandlers).forEach(([type, handler]) => {
+    socket.on(type, handler);
   });
 };
 
