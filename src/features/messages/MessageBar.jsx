@@ -51,6 +51,7 @@ const MessageBar = ({
         <Form.Control
           id="bodyMsg"
           name="bodyMsg"
+          disabled={isSubmitting}
           onChange={handleChange}
           value={values.bodyMsg}
         />

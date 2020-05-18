@@ -17,6 +17,7 @@ import App from './components/App';
 import rootReducer from './reducers';
 import { addNewMessage, removeChannelMessages } from './features/messages/messagesSlice';
 import { addChannel, renameChannel, removeChannel } from './features/channels/channelsSlice';
+import { switchChannel } from './features/channels/currentChannelSlice';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -73,6 +74,7 @@ const run = () => {
       const { id } = data;
       dispatch(removeChannel({ id }));
       dispatch(removeChannelMessages(id));
+      dispatch(switchChannel(1));
     },
   };
 
