@@ -5,10 +5,12 @@ import MessagesBox from '../features/messages/MessagesBox';
 
 const App = () => (
   <Row className="h-100 pb-3">
-    <Col sm={3} className="border-right">
+    <Col sm={3} className="border-right h-100">
       <Channels />
     </Col>
-    <MessagesBox />
+    <Col className="h-100">
+      <MessagesBox />
+    </Col>
   </Row>
 );
 

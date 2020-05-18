@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import cookies from 'js-cookie';
-import { ListGroup } from 'react-bootstrap';
+import { Col, ListGroup } from 'react-bootstrap';
 import { switchChannel } from './currentChannelSlice';
 import Header from './Header';
 import ChannelModal from './ChannelModal';
@@ -27,16 +27,16 @@ const Channels = ({ channels, currentChannelId, switchChannel: toggleChannel }) 
   const [action, setAction] = useState('');
   const handleClose = () => setAction('');
   return (
-    <>
+    <Col className="d-flex flex-column h-100">
       <Header
         currentChannel={currentChannel}
         setAction={setAction}
       />
-      <ListGroup>
+      <ListGroup className="overflow-auto">
         {channels.map(getRenderChannel(currentChannelId, toggleChannel))}
       </ListGroup>
       <ChannelModal handleClose={handleClose} actionName={action} />
-    </>
+    </Col>
   );
 };
 

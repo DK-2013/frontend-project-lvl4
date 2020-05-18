@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 import { useFormik } from 'formik';
+import { Form, InputGroup } from 'react-bootstrap';
 import context from '../../context';
 import { postMessage } from './messagesSlice';
 
@@ -38,7 +39,7 @@ const MessageBar = ({
   } = formik;
   const { network: errorMsg } = errors;
   return (
-    <form
+    <Form
       noValidate=""
       className=""
       onSubmit={(ev) => {
@@ -46,22 +47,19 @@ const MessageBar = ({
         if (!isSubmitting) handleSubmit(ev);
       }}
     >
-      <div className="form-group">
-        <div className="input-group">
-          <input
-            id="bodyMsg"
-            name="bodyMsg"
-            className="form-control"
-            onChange={handleChange}
-            value={values.bodyMsg}
-          />
-          <div className="d-block invalid-feedback">
-            {errorMsg && errorMsg}
-            &nbsp;
-          </div>
-        </div>
-      </div>
-    </form>
+      <InputGroup>
+        <Form.Control
+          id="bodyMsg"
+          name="bodyMsg"
+          onChange={handleChange}
+          value={values.bodyMsg}
+        />
+        <Form.Control.Feedback type="invalid">
+          {errorMsg && errorMsg}
+          &nbsp;
+        </Form.Control.Feedback>
+      </InputGroup>
+    </Form>
   );
 };
 

@@ -1,25 +1,29 @@
 import React from 'react';
+import { Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import MessageBar from './MessageBar';
 
 const MessagesBox = ({ messages, addMessage: addMsg }) => (
-  <div className="col h-100">
-    <div className="d-flex flex-column h-100">
-      {/* todo scroll to last post */}
-      <div id="messages-box" className="chat-messages overflow-auto mb-3">
+  <Col className="d-flex flex-column h-100">
+    {/* todo scroll to last post */}
+    <Row id="messages-box" className="chat-messages overflow-auto mb-3">
+      <Col>
         {messages.map(({ id, text, userName }) => (
-          <div key={id} className="mb-2">
-            <div><b>{userName}</b></div>
+          <p key={id} className="mb-2">
+            <b>{userName}</b>
+            <br />
             {text}
-          </div>
+          </p>
         ))}
-      </div>
-      <div className="mt-auto">
+      </Col>
+    </Row>
+    <Row className="mt-auto">
+      <Col>
         <MessageBar addMessage={addMsg} />
-      </div>
-    </div>
-  </div>
+      </Col>
+    </Row>
+  </Col>
 );
 const selectMessages = ({ messages }) => messages;
 const selectChannel = ({ currentChannelId }) => currentChannelId;
