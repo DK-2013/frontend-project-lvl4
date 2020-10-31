@@ -1,4 +1,5 @@
 // @ts-check
+import i18next from 'i18next';
 import React from 'react';
 import { render } from 'react-dom';
 import { configureStore } from '@reduxjs/toolkit';
@@ -12,6 +13,7 @@ import faker from 'faker';
 import cookies from 'js-cookie';
 import io from 'socket.io-client';
 
+import resources from './locales';
 import { ContextProvider } from './context';
 import App from './components/App';
 import rootReducer from './reducers';
@@ -90,7 +92,11 @@ const renderApp = (store, mountNode) => {
   );
 };
 
-export default () => {
+export default async () => {
+  await i18next.init({
+    lng: 'en',
+    resources,
+  });
   const store = buildStore();
   initSockets(store);
   renderApp(store, document.getElementById('chat'));

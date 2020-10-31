@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import React, { useContext } from 'react';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
@@ -5,7 +6,6 @@ import { Form, InputGroup } from 'react-bootstrap';
 import context from '../../context';
 import { postMessage } from './messagesSlice';
 
-const netErrorMsg = 'App is trying to connect, so messages can’t be sent yet.';
 let isSending = false;
 
 const SubmitForm = ({
@@ -41,6 +41,7 @@ const MessageBar = ({
 }) => {
   const { userName } = useContext(context);
   const dispatch = async (text) => sendMessage({ channelId, userName, text });
+  const netErrorMsg = i18next.t('networkError');
   return (
     <Formik
       initialValues={{ bodyMsg: '' }}

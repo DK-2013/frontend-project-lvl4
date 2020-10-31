@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
@@ -32,7 +33,7 @@ const ChannelForm = ({
           type="submit"
           disabled={isSubmitting}
         >
-          {id ? 'Rename' : 'Add'}
+          {i18next.t(`channels.${id ? 'renameAct' : 'addAct'}`)}
         </Button>
       </InputGroup.Append>
       <Form.Control.Feedback type="invalid">
@@ -53,7 +54,7 @@ const RemoveChannelForm = ({
         name="id"
         plaintext
         readOnly
-        value={`Are you sure remove channel: ${name} ?`}
+        value={i18next.t('channels.confirmRemove', { name })}
       />
       <InputGroup.Append>
         <Button
@@ -61,7 +62,7 @@ const RemoveChannelForm = ({
           type="submit"
           disabled={isSubmitting}
         >
-          Remove
+          {i18next.t('channels.removeAct')}
         </Button>
       </InputGroup.Append>
     </InputGroup>
