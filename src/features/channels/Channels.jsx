@@ -27,8 +27,8 @@ const Channels = ({
   channels: { byId, ids, currentChannelId },
 }) => {
   const currentChannel = byId[currentChannelId];
-  const [action, setAction] = useState('');
-  const handleClose = () => setAction('');
+  const [action, setAction] = useState(null);
+  const handleClose = () => setAction(null);
   return (
     <Col className="d-flex flex-column h-100">
       <Header
@@ -38,7 +38,7 @@ const Channels = ({
       <ListGroup className="overflow-auto">
         {ids.map((id) => renderChannel(byId[id], currentChannelId, toggleChannel))}
       </ListGroup>
-      <ChannelModal handleClose={handleClose} actionName={action} />
+      {action && <ChannelModal handleClose={handleClose} actionName={action} />}
     </Col>
   );
 };

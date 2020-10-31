@@ -7,6 +7,13 @@ import {
 } from 'react-bootstrap';
 import { addChannelRequest, renameChannelRequest, removeChannelRequest } from '../../api/http';
 
+const getInitialValue = (action) => {
+  if (action === 'add') return { id: '', name: '' };
+  const { byId, currentChannelId } = useSelector(({ channels }) => channels);
+  const { id, name } = byId[currentChannelId];
+  return { id, name };
+};
+
 const ChannelForm = ({
   handleSubmit,
   handleChange,
@@ -109,19 +116,12 @@ export default ({
   actionName,
   handleClose,
 }) => {
-  if (!actionName) return null;
-  const currentChannel = useSelector(({
-    channels: { byId, currentChannelId },
-  }) => byId[currentChannelId]);
-
-  if (actionName === 'remove' && !currentChannel) return null;
-  const { id, name } = (actionName !== 'add' && currentChannel) || { id: '', name: '' };
   const { component, getHandler } = actionsStuff[actionName];
   return (
     <Modal show onHide={handleClose}>
       <Modal.Body className="p-4">
         <Formik
-          initialValues={{ id, name }}
+          initialValues={getInitialValue(actionName)}
           onSubmit={getHandler(handleClose)}
           component={component}
         />
