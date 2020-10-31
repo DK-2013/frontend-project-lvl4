@@ -65,7 +65,7 @@ const MessageBar = ({
   );
 };
 
-const mapStateToProps = ({ channels: { currentChannelId } }) => ({ currentChannelId });
+const mapStateToProps = ({ channels: { currentChannelId: channelId } }) => ({ channelId });
 
 const mapDispatchToProps = { sendMessage: postMessage };
 

@@ -30,8 +30,8 @@ const selectChannel = ({ channels: { currentChannelId } }) => currentChannelId;
 
 const selectChannelMessages = createSelector(
   [selectMessages, selectChannel],
-  ({ byId, ids }, channelId) => ids
-    .map((msgId) => byId[msgId]).filter((msg) => msg.channelId === channelId),
+  ({ byId, ids }, currentChannelId) => ids.map((msgId) => byId[msgId])
+    .filter((msg) => msg.channelId === currentChannelId),
 );
 
 const mapStateToProps = (state) => ({

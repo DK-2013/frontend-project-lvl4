@@ -38,34 +38,24 @@ const normalize = (list) => list.reduce(({ byId, ids }, item) => ({
   ids: [...ids, item.id],
 }), { byId: {}, ids: [] });
 
-const run = () => {
-  const userName = getUserName();
+const buildStore = () => {
   const currentChannelId = Number(cookies.get('currentChannelId')) || gon.currentChannelId;
   const channels = normalize(gon.channels);
   const messages = normalize(gon.messages);
-  const store = configureStore({
+  return configureStore({
     reducer: rootReducer,
     preloadedState: {
       channels: { ...channels, currentChannelId },
       messages,
     },
   });
+};
 
-  const mountNode = document.getElementById('chat');
-  render(
-    <Provider store={store}>
-      <ContextProvider value={{ userName }}>
-        <App />
-      </ContextProvider>
-    </Provider>,
-    mountNode,
-  );
-
-  const { dispatch } = store;
+const initSockets = ({ dispatch }) => {
   const socketHandlers = {
     newMessage: ({ data }) => {
       const { attributes: message } = data;
-      if (userName === message.userName) return;
+      if (getUserName() === message.userName) return;
       dispatch(addNewMessage(message));
     },
     newChannel: ({ data }) => {
@@ -89,4 +79,19 @@ const run = () => {
   });
 };
 
-run();
+const renderApp = (store, mountNode) => {
+  render(
+    <Provider store={store}>
+      <ContextProvider value={{ userName: getUserName() }}>
+        <App />
+      </ContextProvider>
+    </Provider>,
+    mountNode,
+  );
+};
+
+export default () => {
+  const store = buildStore();
+  initSockets(store);
+  renderApp(store, document.getElementById('chat'));
+};
