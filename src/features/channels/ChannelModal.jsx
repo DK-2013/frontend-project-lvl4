@@ -109,8 +109,9 @@ export default ({
   handleClose,
 }) => {
   if (!actionName) return null;
-  const currentChannel = useSelector(({ channels, currentChannelId }) => channels
-    .find(({ id: channelId }) => channelId === currentChannelId));
+  const currentChannel = useSelector(({
+    channels: { byId, currentChannelId },
+  }) => byId[currentChannelId]);
 
   if (actionName === 'remove' && !currentChannel) return null;
   const { id, name } = (actionName !== 'add' && currentChannel) || { id: '', name: '' };

@@ -16,8 +16,9 @@ import { ContextProvider } from './context';
 import App from './components/App';
 import rootReducer from './reducers';
 import { addNewMessage, removeChannelMessages } from './features/messages/messagesSlice';
-import { addChannel, renameChannel, removeChannel } from './features/channels/channelsSlice';
-import { switchChannel } from './features/channels/currentChannelSlice';
+import {
+  switchChannel, addChannel, renameChannel, removeChannel,
+} from './features/channels/channelsSlice';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -32,15 +33,20 @@ const getUserName = () => {
 
 const socket = io();
 
+const normalize = (list) => list.reduce(({ byId, ids }, item) => ({
+  byId: { ...byId, [item.id]: item },
+  ids: [...ids, item.id],
+}), { byId: {}, ids: [] });
+
 const run = () => {
   const userName = getUserName();
   const currentChannelId = Number(cookies.get('currentChannelId')) || gon.currentChannelId;
-  const { channels, messages } = gon;
+  const channels = normalize(gon.channels);
+  const messages = normalize(gon.messages);
   const store = configureStore({
     reducer: rootReducer,
     preloadedState: {
-      channels,
-      currentChannelId,
+      channels: { ...channels, currentChannelId },
       messages,
     },
   });

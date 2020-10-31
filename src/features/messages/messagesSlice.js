@@ -4,13 +4,16 @@ import { postMessageRequest } from '../../api/http';
 
 const messagesSlice = createSlice({
   name: 'messages',
-  initialState: [],
+  initialState: {},
   reducers: {
-    addNewMessage(state, { payload: message }) {
-      state.push(message);
+    addNewMessage({ byId, ids }, { payload: message }) {
+      byId[message.id] = message;
+      ids.push(message.id);
     },
     removeChannelMessages(state, { payload: channelId }) {
-      return state.filter((msg) => msg.channelId !== channelId);
+      const ids = state.ids.filter((msgId) => state.byId[msgId].channelId !== channelId);
+      const byId = ids.reduce((acc, msgId) => ({ ...acc, [msgId]: state.byId[msgId] }), {});
+      return { byId, ids };
     },
   },
 });

@@ -26,11 +26,12 @@ const MessagesBox = ({ messages, addMessage: addMsg }) => (
   </Col>
 );
 const selectMessages = ({ messages }) => messages;
-const selectChannel = ({ currentChannelId }) => currentChannelId;
+const selectChannel = ({ channels: { currentChannelId } }) => currentChannelId;
 
 const selectChannelMessages = createSelector(
   [selectMessages, selectChannel],
-  (messages, channelId) => messages.filter((msg) => msg.channelId === channelId),
+  ({ byId, ids }, channelId) => ids
+    .map((msgId) => byId[msgId]).filter((msg) => msg.channelId === channelId),
 );
 
 const mapStateToProps = (state) => ({

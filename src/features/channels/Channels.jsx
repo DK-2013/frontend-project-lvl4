@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import cookies from 'js-cookie';
 import { Col, ListGroup } from 'react-bootstrap';
-import { switchChannel } from './currentChannelSlice';
 import Header from './Header';
 import ChannelModal from './ChannelModal';
+import { switchChannel } from './channelsSlice';
 
-const getRenderChannel = (currentChannelId, toggleChannel) => ({ id, name }) => {
+const renderChannel = ({ id, name }, currentChannelId, toggleChannel) => {
   const active = currentChannelId === id;
   return (
     <ListGroup.Item
@@ -22,8 +22,11 @@ const getRenderChannel = (currentChannelId, toggleChannel) => ({ id, name }) => 
   );
 };
 
-const Channels = ({ channels, currentChannelId, switchChannel: toggleChannel }) => {
-  const currentChannel = channels.find(({ id }) => id === currentChannelId);
+const Channels = ({
+  switchChannel: toggleChannel,
+  channels: { byId, ids, currentChannelId },
+}) => {
+  const currentChannel = byId[currentChannelId];
   const [action, setAction] = useState('');
   const handleClose = () => setAction('');
   return (
@@ -33,14 +36,16 @@ const Channels = ({ channels, currentChannelId, switchChannel: toggleChannel }) 
         setAction={setAction}
       />
       <ListGroup className="overflow-auto">
-        {channels.map(getRenderChannel(currentChannelId, toggleChannel))}
+        {ids.map((id) => renderChannel(byId[id], currentChannelId, toggleChannel))}
       </ListGroup>
       <ChannelModal handleClose={handleClose} actionName={action} />
     </Col>
   );
 };
 
-const mapStateToProps = ({ channels, currentChannelId }) => ({ channels, currentChannelId });
+const mapStateToProps = ({ channels }) => ({
+  channels,
+});
 
 const mapDispatchToProps = { switchChannel };
 
