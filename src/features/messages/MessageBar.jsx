@@ -1,20 +1,25 @@
 import i18next from 'i18next';
 import React, { useContext } from 'react';
-import { connect } from 'react-redux';
-import { Formik } from 'formik';
 import { Form, InputGroup } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import * as yup from 'yup';
+import { Formik } from 'formik';
 import context from '../../context';
 import { postMessage } from './messagesSlice';
 
 let isSending = false;
 
+const validationSchema = yup.object().shape({
+  bodyMsg: yup.string().trim().max(200),
+});
+
 const SubmitForm = ({
-  values, errors: { network: errorMsg }, isSubmitting, handleSubmit, handleChange,
+  values, errors, isSubmitting, handleSubmit, handleChange,
 }) => (
   <Form
     noValidate=""
     className=""
-    onSubmit={(ev) => { // todo return focus to input after submit
+    onSubmit={(ev) => {
       ev.preventDefault();
       if (!isSubmitting) handleSubmit(ev);
     }}
@@ -26,9 +31,10 @@ const SubmitForm = ({
         disabled={isSubmitting}
         onChange={handleChange}
         value={values.bodyMsg}
+        ref={(inp) => { if (inp) inp.focus(); }}
       />
       <Form.Control.Feedback type="invalid" className="d-block">
-        {errorMsg && errorMsg}
+        {(errors.network || errors.bodyMsg)}
         &nbsp;
       </Form.Control.Feedback>
     </InputGroup>
@@ -40,26 +46,33 @@ const MessageBar = ({
   sendMessage,
 }) => {
   const { userName } = useContext(context);
-  const dispatch = async (text) => sendMessage({ channelId, userName, text });
-  const netErrorMsg = i18next.t('networkError');
+
+  const submitHandle = async (text, { resetForm, setErrors }) => {
+    const netErrorMsg = i18next.t('networkError');
+
+    isSending = true;
+    setTimeout(() => {
+      if (isSending) setErrors({ network: netErrorMsg });
+    }, 200);// slow network
+
+    try {
+      await sendMessage({ channelId, userName, text });
+      setErrors({ network: '' });
+      resetForm();
+    } catch (e) {
+      console.error(e);
+      setErrors({ network: netErrorMsg });
+    }
+    isSending = false;
+  };
   return (
     <Formik
       initialValues={{ bodyMsg: '' }}
-      onSubmit={async ({ bodyMsg: text }, { resetForm, setErrors }) => {
-        if (!text) return;
-        isSending = true;
-        setTimeout(() => {
-          if (isSending) setErrors({ network: netErrorMsg });
-        }, 200);// slow network
-        try {
-          await dispatch(text);
-          setErrors({ network: '' });
-          resetForm();
-        } catch (e) {
-          console.error(e);
-          setErrors({ network: netErrorMsg });
+      validationSchema={validationSchema}
+      onSubmit={async ({ bodyMsg: text }, formikHelpers) => {
+        if (text.trim()) {
+          await submitHandle(text, formikHelpers);
         }
-        isSending = false;
       }}
       component={SubmitForm}
     />
