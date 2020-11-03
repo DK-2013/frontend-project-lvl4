@@ -7,8 +7,6 @@ import { Formik } from 'formik';
 import context from '../../context';
 import { postMessage } from './messagesSlice';
 
-let isSending = false;
-
 const validationSchema = yup.object().shape({
   bodyMsg: yup.string().trim().max(200),
 });
@@ -41,6 +39,16 @@ const SubmitForm = ({
   </Form>
 );
 
+/* let isSending = false;
+  const checkNetwork = async (cb, setError) => {
+  isSending = true;
+  setTimeout(() => {
+    if (isSending) setError();
+  }, 200);// slow network
+  await cb();
+  isSending = false;
+}; */
+
 const MessageBar = ({
   channelId,
   sendMessage,
@@ -48,22 +56,17 @@ const MessageBar = ({
   const { userName } = useContext(context);
 
   const submitHandle = async (text, { resetForm, setErrors }) => {
-    const netErrorMsg = i18next.t('networkError');
-
-    isSending = true;
-    setTimeout(() => {
-      if (isSending) setErrors({ network: netErrorMsg });
-    }, 200);// slow network
+    const setNetError = () => setErrors({ network: i18next.t('networkError') });
+    const cleanNetError = () => setErrors({ network: '' });
 
     try {
       await sendMessage({ channelId, userName, text });
-      setErrors({ network: '' });
+      cleanNetError();
       resetForm();
     } catch (e) {
       console.error(e);
-      setErrors({ network: netErrorMsg });
+      setNetError();
     }
-    isSending = false;
   };
   return (
     <Formik
