@@ -4,9 +4,9 @@ import cookies from 'js-cookie';
 import { Col, ListGroup } from 'react-bootstrap';
 import Header from './Header';
 import ChannelModal from './ChannelModal';
-import { switchChannel } from './channelsSlice';
+import { switchChannel } from './currentChannelSlice';
 
-const renderChannel = ({ id, name }, currentChannelId, toggleChannel) => {
+const getRenderChannel = (currentChannelId, toggleChannel) => ({ id, name }) => {
   const active = currentChannelId === id;
   return (
     <ListGroup.Item
@@ -23,7 +23,7 @@ const renderChannel = ({ id, name }, currentChannelId, toggleChannel) => {
 };
 
 const Channels = () => {
-  const { byId, ids, currentChannelId } = useSelector(({ channels }) => channels);
+  const { channels, currentChannelId } = useSelector((state) => state);
   const dispatch = useDispatch();
   const toggleChannel = useCallback((id) => dispatch(switchChannel(id)), [dispatch]);
   const [action, setAction] = useState(null);
@@ -34,7 +34,7 @@ const Channels = () => {
         setAction={setAction}
       />
       <ListGroup className="overflow-auto">
-        {ids.map((id) => renderChannel(byId[id], currentChannelId, toggleChannel))}
+        {channels.map(getRenderChannel(currentChannelId, toggleChannel))}
       </ListGroup>
       {action && <ChannelModal handleClose={handleClose} actionName={action} />}
     </Col>

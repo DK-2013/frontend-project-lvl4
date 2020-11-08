@@ -6,11 +6,11 @@ import {
   Button, Modal, Form, InputGroup,
 } from 'react-bootstrap';
 import { addChannelRequest, renameChannelRequest, removeChannelRequest } from '../../api/http';
+import { currentChannelSelector } from './currentChannelSlice';
 
 const getInitialValue = (action) => {
   if (action === 'add') return { id: '', name: '' };
-  const { byId, currentChannelId } = useSelector(({ channels }) => channels);
-  const { id, name } = byId[currentChannelId];
+  const { id, name } = useSelector(currentChannelSelector);
   return { id, name };
 };
 

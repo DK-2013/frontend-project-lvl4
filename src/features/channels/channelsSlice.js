@@ -3,29 +3,21 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const channelsSlice = createSlice({
   name: 'channels',
-  initialState: {},
+  initialState: [],
   reducers: {
-    switchChannel(state, { payload }) {
-      state.currentChannelId = payload;
-    },
     addChannel(state, { payload: channel }) {
-      state.byId[channel.id] = channel;
-      state.ids.push(channel.id);
+      state.push(channel);
     },
-    removeChannel(state, { payload: channelId }) {
-      delete state.byId[channelId];
-      state.ids = state.ids.filter((id) => channelId !== id);
-      state.currentChannelId = 1;
-    },
-    renameChannel(state, { payload: { id, name } }) {
-      const channel = state.byId[id];
+    renameChannel(state, { payload: { id: channelId, name } }) {
+      const channel = state.find(({ id }) => id === channelId);
       channel.name = name;
     },
+    removeChannel: (state, { payload }) => state.filter(({ id }) => payload !== id),
   },
 });
 
 export const {
-  switchChannel, addChannel, renameChannel, removeChannel,
+  addChannel, renameChannel, removeChannel,
 } = channelsSlice.actions;
 
 export default channelsSlice.reducer;

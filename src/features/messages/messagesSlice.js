@@ -1,24 +1,22 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import { postMessageRequest } from '../../api/http';
+import { removeChannel } from '../channels/channelsSlice';
 
 const messagesSlice = createSlice({
   name: 'messages',
-  initialState: {},
+  initialState: [],
   reducers: {
-    addNewMessage({ byId, ids }, { payload: message }) {
-      byId[message.id] = message;
-      ids.push(message.id);
+    addNewMessage(state, { payload: message }) {
+      state.push(message);
     },
-    removeChannel(state, { payload: channelId }) {
-      const ids = state.ids.filter((msgId) => state.byId[msgId].channelId !== channelId);
-      const byId = ids.reduce((acc, msgId) => ({ ...acc, [msgId]: state.byId[msgId] }), {});
-      return { byId, ids };
-    },
+  },
+  extraReducers: {
+    [removeChannel]: (state, { payload }) => state.filter(({ channelId }) => channelId !== payload),
   },
 });
 
-export const { addNewMessage, removeChannelMessages } = messagesSlice.actions;
+export const { addNewMessage } = messagesSlice.actions;
 
 export default messagesSlice.reducer;
 

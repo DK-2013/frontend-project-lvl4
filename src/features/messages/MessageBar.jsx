@@ -51,7 +51,7 @@ const SubmitForm = ({
 
 const MessageBar = () => {
   const { userName } = useContext(context);
-  const channelId = useSelector(({ channels }) => channels.currentChannelId);
+  const channelId = useSelector(({ currentChannelId }) => currentChannelId);
   const dispatch = useDispatch();
 
   const sendMessage = useCallback(async (data) => {

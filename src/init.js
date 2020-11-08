@@ -24,19 +24,15 @@ const setUserNameIfEmpty = () => {
   return cookies.get('userName');
 };
 
-const normalize = (list) => list.reduce(({ byId, ids }, item) => ({
-  byId: { ...byId, [item.id]: item },
-  ids: [...ids, item.id],
-}), { byId: {}, ids: [] });
-
 const buildStore = () => {
   const currentChannelId = Number(cookies.get('currentChannelId')) || gon.currentChannelId;
-  const channels = normalize(gon.channels);
-  const messages = normalize(gon.messages);
+  const channels = [...gon.channels];
+  const messages = [...gon.messages];
   return configureStore({
     reducer: rootReducer,
     preloadedState: {
-      channels: { ...channels, currentChannelId },
+      channels,
+      currentChannelId,
       messages,
     },
   });
@@ -60,6 +56,7 @@ const initSockets = ({ dispatch }) => {
     },
     removeChannel: ({ data }) => {
       const { id } = data;
+      console.log(id);
       dispatch(removeChannel(id));
     },
   };
