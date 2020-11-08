@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import cookies from 'js-cookie';
 import { Col, ListGroup } from 'react-bootstrap';
 import Header from './Header';
@@ -22,17 +22,15 @@ const renderChannel = ({ id, name }, currentChannelId, toggleChannel) => {
   );
 };
 
-const Channels = ({
-  switchChannel: toggleChannel,
-  channels: { byId, ids, currentChannelId },
-}) => {
-  const currentChannel = byId[currentChannelId];
+const Channels = () => {
+  const { byId, ids, currentChannelId } = useSelector(({ channels }) => channels);
+  const dispatch = useDispatch();
+  const toggleChannel = useCallback((id) => dispatch(switchChannel(id)), [dispatch]);
   const [action, setAction] = useState(null);
   const handleClose = () => setAction(null);
   return (
     <Col className="d-flex flex-column h-100">
       <Header
-        currentChannel={currentChannel}
         setAction={setAction}
       />
       <ListGroup className="overflow-auto">
@@ -43,10 +41,4 @@ const Channels = ({
   );
 };
 
-const mapStateToProps = ({ channels }) => ({
-  channels,
-});
-
-const mapDispatchToProps = { switchChannel };
-
-export default connect(mapStateToProps, mapDispatchToProps)(Channels);
+export default Channels;

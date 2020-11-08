@@ -1,8 +1,16 @@
 import i18next from 'i18next';
 import React from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import { createSelector } from '@reduxjs/toolkit';
 
-const Header = ({ currentChannel, setAction }) => {
+const selectCurrentChannel = createSelector(
+  ({ channels }) => channels,
+  ({ byId, currentChannelId }) => byId[currentChannelId],
+);
+
+const Header = ({ setAction }) => {
+  const currentChannel = useSelector(selectCurrentChannel);
   const { removable } = currentChannel || {};
   return (
     <div className="d-flex mb-2">

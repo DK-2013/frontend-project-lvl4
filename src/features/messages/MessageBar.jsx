@@ -1,14 +1,14 @@
 import i18next from 'i18next';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import context from '../../context';
 import { postMessage } from './messagesSlice';
 
 const validationSchema = yup.object().shape({
-  bodyMsg: yup.string().trim().max(200),
+  bodyMsg: yup.string().trim().required(' ').max(200),
 });
 
 const SubmitForm = ({
@@ -49,11 +49,14 @@ const SubmitForm = ({
   isSending = false;
 }; */
 
-const MessageBar = ({
-  channelId,
-  sendMessage,
-}) => {
+const MessageBar = () => {
   const { userName } = useContext(context);
+  const channelId = useSelector(({ channels }) => channels.currentChannelId);
+  const dispatch = useDispatch();
+
+  const sendMessage = useCallback(async (data) => {
+    await dispatch(postMessage(data));
+  }, [dispatch]);
 
   const submitHandle = async (text, { resetForm, setErrors }) => {
     const setNetError = () => setErrors({ network: i18next.t('networkError') });
@@ -73,17 +76,11 @@ const MessageBar = ({
       initialValues={{ bodyMsg: '' }}
       validationSchema={validationSchema}
       onSubmit={async ({ bodyMsg: text }, formikHelpers) => {
-        if (text.trim()) {
-          await submitHandle(text, formikHelpers);
-        }
+        await submitHandle(text, formikHelpers);
       }}
       component={SubmitForm}
     />
   );
 };
 
-const mapStateToProps = ({ channels: { currentChannelId: channelId } }) => ({ channelId });
-
-const mapDispatchToProps = { sendMessage: postMessage };
-
-export default connect(mapStateToProps, mapDispatchToProps)(MessageBar);
+export default MessageBar;

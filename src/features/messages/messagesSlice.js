@@ -10,7 +10,7 @@ const messagesSlice = createSlice({
       byId[message.id] = message;
       ids.push(message.id);
     },
-    removeChannelMessages(state, { payload: channelId }) {
+    removeChannel(state, { payload: channelId }) {
       const ids = state.ids.filter((msgId) => state.byId[msgId].channelId !== channelId);
       const byId = ids.reduce((acc, msgId) => ({ ...acc, [msgId]: state.byId[msgId] }), {});
       return { byId, ids };

@@ -1,3 +1,3 @@
-import app from './application';
+import app from './init';
 
 app();
