@@ -20,7 +20,7 @@ const Header = ({ setAction }) => {
           </Dropdown>
         )
         : <Button size="sm" variant="outline-secondary" disabled>{i18next.t('channels.name')}</Button>}
-      <Button className="ml-auto" size="sm" variant="outline-secondary" onClick={() => setAction('add')}>{i18next.t('channels.addAct')}</Button>
+      <Button className="ms-auto" size="sm" variant="outline-secondary" onClick={() => setAction('add')}>{i18next.t('channels.addAct')}</Button>
     </div>
   );
 };
