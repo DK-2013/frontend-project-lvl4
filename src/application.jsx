@@ -13,7 +13,6 @@ import App from './components/App';
 
 const getUserName = () => cookies.get('userName');
 
-
 export default (store, mountNode) => {
   render(
     <Provider store={store}>
