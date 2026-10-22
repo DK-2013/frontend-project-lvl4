@@ -4,8 +4,9 @@ start:
 	heroku local -f Procfile.dev
 
 local:
-	make start-backend
-	make start-frontend
+	npx concurrently -k -n backend,frontend -c blue,green \
+		"make start-backend" \
+		"make start-frontend"
 
 start-backend:
 	npx nodemon --exec npx babel-node server/bin/slack.js

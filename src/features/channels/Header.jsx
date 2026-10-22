@@ -5,22 +5,23 @@ import { useSelector } from 'react-redux';
 import { currentChannelSelector } from './currentChannelSlice';
 
 const { t } = i18next;
+const i18 = t.bind(i18next);
 
 const Header = ({ setAction }) => {
   const currentChannel = useSelector(currentChannelSelector);
   const { removable } = currentChannel || {};
   let removeBtn = (
     <Button size="sm" variant="outline-secondary" disabled>
-      {t('channels.name')}
+      {i18('channels.name')}
     </Button>
   );
   if (removable) {
     removeBtn = (
       <Dropdown id="manage-channels" title="Channels" size="sm" onSelect={setAction}>
-        <Dropdown.Toggle size="sm" variant="outline-secondary">{t('channels.name')}</Dropdown.Toggle>
+        <Dropdown.Toggle size="sm" variant="outline-secondary">{i18('channels.name')}</Dropdown.Toggle>
         <Dropdown.Menu className="m-0">
-          <Dropdown.Item eventKey="rename">{t('channels.renameAct')}</Dropdown.Item>
-          <Dropdown.Item eventKey="remove">{t('channels.removeAct')}</Dropdown.Item>
+          <Dropdown.Item eventKey="rename">{i18('channels.renameAct')}</Dropdown.Item>
+          <Dropdown.Item eventKey="remove">{i18('channels.removeAct')}</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     );
@@ -29,7 +30,7 @@ const Header = ({ setAction }) => {
     <div className="d-flex mb-2">
       {removeBtn}
       <Button className="ms-auto" size="sm" variant="outline-secondary" onClick={() => setAction('add')}>
-        {t('channels.addAct')}
+        {i18('channels.addAct')}
       </Button>
     </div>
   );

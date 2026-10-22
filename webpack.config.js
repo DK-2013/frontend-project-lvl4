@@ -1,6 +1,7 @@
 // @ts-check
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const sass = require('sass');
 
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
 // const isDevelopment = !isProduction;
 console.log('isProduction', isProduction);
@@ -21,7 +22,7 @@ module.exports = {
     publicPath: '/assets/',
   },
   plugins: [
-    // new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin(),
   ],
   module: {
     rules: [
@@ -33,10 +34,19 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         use: [
-          { loader: 'style-loader' },
-          { loader: 'css-loader' },
-          { loader: 'postcss-loader' },
-          { loader: 'sass-loader' },
+          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader',
+          'postcss-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: sass,
+              sassOptions: {
+                quietDeps: true,
+                silenceDeprecations: ['import', 'global-builtin', 'legacy-js-api'],
+              },
+            },
+          },
         ],
       },
     ],

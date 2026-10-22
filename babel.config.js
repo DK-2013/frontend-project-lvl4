@@ -1,10 +1,9 @@
 module.exports = {
   presets: [
-    '@babel/preset-env',
+    ['@babel/preset-env', { targets: { node: 'current' } }], // для сервера;
     '@babel/preset-react',
   ],
   plugins: [
-    ['@babel/plugin-proposal-decorators', { legacy: true }],
-    ['@babel/plugin-proposal-class-properties', { loose: true }],
+    ['@babel/plugin-transform-class-properties', { loose: true }], // todo убрать loose
   ],
 };
