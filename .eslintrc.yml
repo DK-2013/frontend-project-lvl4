@@ -13,10 +13,19 @@ env:
 
 settings:
   import/resolver:
-    - node
-    - webpack
+    node:
+      extensions:
+        - .js
+        - .jsx
 
 rules:
   import/extensions: 0
+  # `gon` — глобальная переменная из pug-шаблона, в vite собирается через алиас (src/gon.js)
+  import/no-unresolved:
+    - error
+    - commonjs: true
+      caseSensitive: true
+      ignore:
+        - ^gon$
   react/prop-types: 0
   no-console: 0

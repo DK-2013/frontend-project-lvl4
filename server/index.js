@@ -16,14 +16,20 @@ const isProduction = process.env.NODE_ENV === 'production';
 const appPath = path.join(__dirname, '..');
 const isDevelopment = !isProduction;
 
+const viteDevDomain = 'http://localhost:8080';
+
 const setUpViews = (app) => {
-  const domain = isDevelopment ? 'http://localhost:8080' : '';
   app.register(pointOfView, {
     engine: {
       pug: Pug,
     },
     defaultContext: {
-      assetPath: (filename) => `${domain}/assets/${filename}`,
+      isDevelopment,
+      // В production Vite кладёт бандл в dist/public c префиксом /assets,
+      // который раздаёт fastify-static (см. setUpStaticAssets).
+      cssHref: isDevelopment ? null : '/assets/main.css',
+      entrySrc: isDevelopment ? `${viteDevDomain}/src/index.js` : '/assets/main.js',
+      viteClientSrc: isDevelopment ? `${viteDevDomain}/@vite/client` : null,
     },
     templates: path.join(__dirname, 'views'),
   });
